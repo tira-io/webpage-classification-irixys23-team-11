@@ -12,7 +12,7 @@ from utils import load_data
 class SkLearnClassifier():
     def __init__(self, field):
         self.__field = field
-        self.__pipeline_name = os.path.dirname(os.path.realpath(__file__)) + f'sklearn-{self.__field}.pkl'
+        self.__pipeline_name = os.path.dirname(os.path.realpath(__file__)) + f'/sklearn-{self.__field}.pkl'
         try:
             self.pipeline = joblib.load(self.__pipeline_name)
         except:
