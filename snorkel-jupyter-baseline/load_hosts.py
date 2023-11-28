@@ -31,20 +31,6 @@ categories = {
 }  
 
 
-
-'''def list_files(dir):                                                                                                  
-    r = []                                                                                                            
-    subdirs = [x[0] for x in os.walk(dir)]                                                                            
-    for subdir in subdirs:                                                                                            
-        files = os.walk(subdir).next()[2]                                                                             
-        if (len(files) > 0):                                                                                          
-            for file in files:
-                print(subdir, file)    
-                if file == 'hosts':                                                                                    
-                    r.append(os.path.join(subdir, file))                                                                         
-    return r'''
-
-
 def list_files(dir):
     # r = []
     dict_hosts = {}
@@ -70,6 +56,5 @@ def parse_hosts(hosts_file_path, subdir):
 
 
 dict = hosts_file_paths = list_files('snorkel-jupyter-baseline/hosts_data/')
-print(dict)
 #for hosts in hosts_file_paths:
  #   parse_hosts(hosts)
