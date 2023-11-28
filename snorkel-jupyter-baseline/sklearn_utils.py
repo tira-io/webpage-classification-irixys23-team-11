@@ -3,6 +3,7 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline
 import os
 import joblib
+import pandas as pd
 
 
 class SkLearnClassifier():
