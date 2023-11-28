@@ -58,6 +58,6 @@ if __name__ == '__main__':
     ret = []
 
     for _, i in load_data(args.input, args.field).iterrows():
-        ret += [{'uuid': i['uid'], 'prediction': classifier.predict(i.to_dict())[0]}]
+        ret += [{'uid': i['uid'], 'prediction': classifier.predict(i.to_dict())[0]}]
     
     pd.DataFrame(ret).to_json(args.output, orient='records', lines=True)
