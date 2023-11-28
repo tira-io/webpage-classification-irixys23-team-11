@@ -3,7 +3,7 @@ from utils import ABSTAIN, BENIGN, MALICIOUS, ADULT
 from content_filter import Filter
 
 filter = Filter()
-def is_adult_content(text, additional_terms=[], length=250):
+def is_adult_content(text, additional_terms=[], length=100):
     if filter.check(text[:length]).as_bool:
         return ADULT
     return ABSTAIN
