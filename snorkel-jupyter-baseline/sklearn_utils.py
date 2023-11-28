@@ -15,7 +15,7 @@ class SkLearnClassifier():
             self.pipeline = None
 
     def predict(self, data_point):
-        return self.pipeline.predict(process(pd.DataFrame([data_point])))
+        return self.pipeline.predict(self.process(pd.DataFrame([data_point])))
 
     def train(self, train_inputs, train_truths):
         if self.pipeline is not None:
