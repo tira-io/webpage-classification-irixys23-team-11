@@ -74,23 +74,34 @@ def all_outgoing_links(parsed_html):
     
     return list(ret)
 
-def load_data(file_path):
+def load_data(file_path, fields):
   from resiliparse.parse.html import HTMLTree
   data = []
   with open(file_path, 'r') as file:
       for line in tqdm(file):
           json_data = json.loads(line)
           if 'html' in json_data:
-            json_data['plain_text'] = extract_plain_text(json_data['html'])
-            json_data['main_content'] = extract_plain_text(json_data['html'], main_content=True)
-            json_data['url_tokenized'] = ' '.join(url_tokenizetion(json_data['url']))
-            json_data['url_params'] = ' '.join(url_params(json_data['url']))
-            json_data['url_fragment'] = ' '.join(url_fragment(json_data['url']))
-            parsed_html = HTMLTree.parse(json_data['html'])
-            json_data['outgoing_links'] = all_outgoing_links(parsed_html)
+            if 'plain_text' in fields:
+                json_data['plain_text'] = extract_plain_text(json_data['html'])
+            if 'main_content' in fields:
+                json_data['main_content'] = extract_plain_text(json_data['html'], main_content=True)
+            if 'url_tokenized' in fields:
+                json_data['url_tokenized'] = ' '.join(url_tokenizetion(json_data['url']))
+            if 'url_params' in fields:
+                json_data['url_params'] = ' '.join(url_params(json_data['url']))
+            if 'url_fragment' in fields:
+                json_data['url_fragment'] = ' '.join(url_fragment(json_data['url']))
             
-            json_data['image_text'] = ' '.join(media_elements_to_human_readable_text(parsed_html, 'img'))
-            json_data['video_text'] = ' '.join(media_elements_to_human_readable_text(parsed_html, 'video'))
+            if 'outgoing_links' in fields or 'image_text' in fields or 'video_text' in fields:
+                parsed_html = HTMLTree.parse(json_data['html'])
+                if 'outgoing_links' in fields:
+                    json_data['outgoing_links'] = all_outgoing_links(parsed_html)
+            
+                if 'image_text' in fields:
+                    json_data['image_text'] = ' '.join(media_elements_to_human_readable_text(parsed_html, 'img'))
+                
+                if 'video_text' in fields:
+                    json_data['video_text'] = ' '.join(media_elements_to_human_readable_text(parsed_html, 'video'))
           data.append(json_data)
   df = pd.DataFrame(data)
   return df
