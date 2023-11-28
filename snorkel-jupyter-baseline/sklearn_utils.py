@@ -1,10 +1,9 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline
-
-
+import os
 class SkLearnClassifier():
-    def __init__(field):
+    def __init__(self, field):
         self.__field = field
         self.__pipeline_name = os.path.dirname(os.path.realpath(__file__)) + f'sklearn-{self.__field}.pkl'
         try:
@@ -26,7 +25,7 @@ class SkLearnClassifier():
     def process(self, inputs, truths=None):
         inputs = {i['uuid']: i[self.__field] for i in inputs.iterrows()}
         truths = None if not truths else {i['uuid']: i['label'] for i in truths.iterrows()}
-	ret_inputs, ret_truths = [], []
+        ret_inputs, ret_truths = [], []
 
         for uuid in inputs.keys():
             ret_inputs += [inputs[uuid]]
@@ -37,4 +36,3 @@ class SkLearnClassifier():
 
     def new_pipeline(self):
         return Pipeline([('tfidf', TfidfVectorizer()), ('clf', SGDClassifier())])
-
