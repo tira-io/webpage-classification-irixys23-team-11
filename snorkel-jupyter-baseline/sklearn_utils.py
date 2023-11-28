@@ -26,8 +26,8 @@ class SkLearnClassifier():
         joblib.dump(pipeline, self.__pipeline_name)
 
     def process(self, inputs, truths=None):
-        inputs = {i['uuid']: i[self.__field] for i in inputs.iterrows()}
-        truths = None if not truths else {i['uuid']: i['label'] for i in truths.iterrows()}
+        inputs = {i['uuid']: i[self.__field] for _, i in inputs.iterrows()}
+        truths = None if not truths else {i['uuid']: i['label'] for _, i in truths.iterrows()}
         ret_inputs, ret_truths = [], []
 
         for uuid in inputs.keys():
