@@ -2,6 +2,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline
 import os
+import joblib
+
+
 class SkLearnClassifier():
     def __init__(self, field):
         self.__field = field
