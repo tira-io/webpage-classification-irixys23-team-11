@@ -4,3 +4,4 @@ snorkel
 resiliparse
 scikit-learn
 pandas
+content-filter
