@@ -9,6 +9,24 @@ BENIGN = 0
 MALICIOUS = 1
 ADULT = 2
 
+def extract_all_tags(parsed_html, tag_name):
+    ret = []
+
+    for tag in [parsed_html.body, parsed_html.head]:
+        if not tag:
+            continue
+
+        for matching_tag in tag.get_elements_by_tag_name(tag_name):
+            ret += [matching_tag]
+    
+    return ret
+
+def extract_all_text_of_tags(html_code, tag_name):
+    ret = []
+    for i in extract_all_tags(html_code, tag_name):
+        ret += [i.text]
+    return ' '.join(ret)
+
 def url_tokenizetion(identifier):
     identifier = re.sub(r'https?://|www.', '', identifier)
     identifier = re.split(r'[^a-zA-Z0-9]+', identifier)
@@ -18,6 +36,18 @@ def url_tokenizetion(identifier):
     for i in [m.group(0) for m in matches]:
         ret += i.split()
     return [i.lower() for i in ret]
+
+def media_elements_to_human_readable_text(html, media_type):
+    ret = []
+    for i in extract_all_tags(html, media_type):
+        if 'src' in i.attrs:
+            ret += [' '.join(url_tokenizetion(i.getattr('src')))]
+        
+        for k in ['alt', 'src', 'desc', 'description']:
+            if k in i.attrs:
+                ret += [i.getattr(k)]
+
+    return ret
 
 assert ['123', 'com', 'hello', 'world'] == url_tokenizetion('123.com/helloWorld')
 
@@ -33,7 +63,19 @@ def url_fragment(url):
 
     return url_tokenizetion(url.split('#')[1]) 
 
+def all_outgoing_links(parsed_html):
+    ret = set()
+    if not parsed_html or not parsed_html.body:
+        return []
+
+    for a in parsed_html.body.get_elements_by_tag_name('a'):
+        if a and 'href' in a.attrs:
+            ret.add(a.getattr('href'))
+    
+    return list(ret)
+
 def load_data(file_path):
+  from resiliparse.parse.html import HTMLTree
   data = []
   with open(file_path, 'r') as file:
       for line in tqdm(file):
@@ -44,6 +86,11 @@ def load_data(file_path):
             json_data['url_tokenized'] = ' '.join(url_tokenizetion(json_data['url']))
             json_data['url_params'] = ' '.join(url_params(json_data['url']))
             json_data['url_fragment'] = ' '.join(url_fragment(json_data['url']))
+            parsed_html = HTMLTree.parse(json_data['html'])
+            json_data['outgoing_links'] = all_outgoing_links(parsed_html)
+            
+            json_data['image_text'] = ' '.join(media_elements_to_human_readable_text(parsed_html, 'img'))
+            json_data['video_text'] = ' '.join(media_elements_to_human_readable_text(parsed_html, 'video'))
           data.append(json_data)
   df = pd.DataFrame(data)
   return df
