@@ -1,9 +1,12 @@
+#!/usr/bin/env python3
+import argparse
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline
 import os
 import joblib
 import pandas as pd
+from utils import load_data
 
 
 class SkLearnClassifier():
@@ -40,3 +43,21 @@ class SkLearnClassifier():
 
     def new_pipeline(self):
         return Pipeline([('tfidf', TfidfVectorizer()), ('clf', SGDClassifier())])
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Classify a webpage.')
+    parser.add_argument("-i", "--input", help="Path to the input file in jsonl.", required=True)
+    parser.add_argument("-o", "--output", help="Path to the output directory.", required=True)
+    parser.add_argument("-f", "--field", help="Path to save the trained model.", required=True)
+    return parser.parse_args()
+
+if __name__ == '__main__':
+    args = parse_args()
+    classifier = SkLearnClassifier(args.field)
+    ret = []
+
+    for _, i in load_data(args.input, args.field).iterrows():
+        ret += [{'uuid': i['uid'], 'prediction': classifier.predict(i.to_dict())[0]}]
+    
+    pd.DataFrame(ret).to_json(args.output, orient='records', lines=True)
