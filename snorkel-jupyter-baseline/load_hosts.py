@@ -63,27 +63,45 @@ def parse_hosts(hosts_file_path, subdir):
 hosts_file_paths = list_files(os.path.dirname(os.path.realpath(__file__)) + '/hosts_data/')
 
 @labeling_function()
-def is_malicious(doc):
-    from urllib.parse import urlparse
-    url = doc['url']
-    host = urlparse(url).netloc
-    if host not in hosts_file_paths:
-        return ABSTAIN
-    
-    for directory in hosts_file_paths[host]:
-        if directory in categories[MALICIOUS]:
+def lf_outgoing_host_is_malicious(doc):
+    for outgoing_link in doc['outgoing_links']:
+        if is_malicious_host(outgoing_link):
             return MALICIOUS
     return ABSTAIN
 
 @labeling_function()
-def is_adult(doc):
+def lf_host_is_malicious(doc):
+    return MALICIOUS if is_malicious_host(doc['url']) else ABSTAIN
+
+@labeling_function()
+def lf_outgoing_host_is_adult(doc):
+    for outgoing_link in doc['outgoing_links']:
+        if is_adult_host(outgoing_link):
+            return ADULT
+    return ABSTAIN
+
+@labeling_function()
+def lf_host_is_adult(doc):
+    return ADULT if is_adult_host(doc['url']) else ABSTAIN
+
+def is_adult_host(url):
     from urllib.parse import urlparse
-    url = doc['url']
     host = urlparse(url).netloc
     if host not in hosts_file_paths:
-        return ABSTAIN
+        return False
     
     for directory in hosts_file_paths[host]:
         if directory in categories[ADULT]:
-            return ADULT
-    return ABSTAIN
+            return True
+    return False
+
+def is_malicious_host(url):
+    from urllib.parse import urlparse
+    host = urlparse(url).netloc
+    if host not in hosts_file_paths:
+        return False
+    
+    for directory in hosts_file_paths[host]:
+        if directory in categories[MALICIOUS]:
+            return True
+    return False
