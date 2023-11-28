@@ -27,15 +27,15 @@ class SkLearnClassifier():
 
     def process(self, inputs, truths=None):
         inputs = {i['uid']: i[self.__field] for _, i in inputs.iterrows()}
-        truths = None if not truths else {i['uid']: i['label'] for _, i in truths.iterrows()}
+        truths = None if truths is None else {i['uid']: i['label'] for _, i in truths.iterrows()}
         ret_inputs, ret_truths = [], []
 
         for uuid in inputs.keys():
             ret_inputs += [inputs[uuid]]
-            if truths:
+            if truths is not None:
                 ret_truths += [truths[uuid]]
 
-        return (ret_inputs, ret_truths) if truths else ret_inputs
+        return (ret_inputs, ret_truths) if truths is not None else ret_inputs
 
     def new_pipeline(self):
         return Pipeline([('tfidf', TfidfVectorizer()), ('clf', SGDClassifier())])
