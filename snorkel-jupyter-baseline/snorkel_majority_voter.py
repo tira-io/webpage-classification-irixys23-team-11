@@ -44,9 +44,11 @@ if __name__ == '__main__':
     predictions = majority_model.predict(L=input_data_with_lf)
 
     ret = []
+    label_mapping = {v:k for k,v in LABEL_MAPPING.items()}
+    label_mapping[-1] = 'Malicious'
     for i in range(len(input_data)):
-        uid = input_data.loc[i]
-        label = LABEL_MAPPING[predictions[i]] if predictions[i] in LABEL_MAPPING else MALICIOUS
+        uid = input_data.loc[i]['uid']
+        label = label_mapping[predictions[i]]
         ret += [{'uid': uid, 'prediction': label}]
 
     pd.DataFrame(ret).to_json(args.output, orient='records', lines=True)
