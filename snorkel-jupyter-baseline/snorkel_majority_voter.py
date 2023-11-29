@@ -28,7 +28,7 @@ def get_label_functions(variant):
                                     lf_common_adult_content_keywords, lf_euphemisms_for_adult, lf_adult_url_structure, lf_adult_industry_domains,
                                     lf_age_restriction, lf_explicit_adult_keywords, lf_outgoing_host_is_malicious, lf_host_is_malicious,
                                     lf_outgoing_host_is_adult, lf_host_is_adult, lf_sk_plain_text,  lf_sk_url])
-    
+    if variant == 'top-10':
     raise ValueError('Unknown variant ' + variant)
 
 if __name__ == '__main__':
