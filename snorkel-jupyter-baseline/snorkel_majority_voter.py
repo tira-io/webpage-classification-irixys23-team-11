@@ -29,12 +29,12 @@ def get_label_functions(variant):
                                     lf_age_restriction, lf_explicit_adult_keywords, lf_outgoing_host_is_malicious, lf_host_is_malicious,
                                     lf_outgoing_host_is_adult, lf_host_is_adult, lf_sk_plain_text,  lf_sk_url])
     if variant == 'top-10':
-    	return return PandasLFApplier(lfs=[lf_sexual_innuendos,  lf_url_has_adult_content, lf_adult_keywords,    
+        return PandasLFApplier(lfs=[lf_sexual_innuendos,  lf_url_has_adult_content, lf_adult_keywords,    
                                            lf_common_adult_content_keywords, lf_explicit_adult_keywords,
                                            lf_outgoing_host_is_malicious, lf_host_is_malicious, lf_outgoing_host_is_adult, 
                                            lf_sk_plain_text,  lf_sk_url])
     if variant == 'top-5':
-    	return return PandasLFApplier(lfs=[lf_url_has_adult_content, lf_outgoing_host_is_malicious, lf_host_is_malicious, 
+        return PandasLFApplier(lfs=[lf_url_has_adult_content, lf_outgoing_host_is_malicious, lf_host_is_malicious, 
                                            lf_sk_plain_text,  lf_sk_url])
 
     raise ValueError('Unknown variant ' + variant)
