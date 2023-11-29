@@ -9,6 +9,12 @@ BENIGN = 0
 MALICIOUS = 1
 ADULT = 2
 
+LABEL_MAPPING = {
+    'Benign': BENIGN,
+    'Malicious': MALICIOUS,
+    'Adult': ADULT
+}
+
 def extract_all_tags(parsed_html, tag_name):
     ret = []
 
