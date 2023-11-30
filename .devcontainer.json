@@ -5,7 +5,10 @@
       "extensions": ["ms-python.python", "ms-python.vscode-pylance", "ms-toolsai.jupyter"]
     },
     "codespaces": {
-      "README.md"
+      "openFiles":[
+	"README.md",
+        "src/README.md"
+      ]
     }
   }
 }
